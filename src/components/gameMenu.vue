@@ -1,0 +1,347 @@
+<template>
+  <div id="content">
+    <!-- <div class="header">
+      <div style="float: left; height: 100px;margin-left:20px">
+        <img style="height: 80%" src="../assets/logo.jpg" alt="" />
+      </div>
+      <div
+        style="
+          float: left;
+          display: flex;
+          justify-content: space-between;
+          align-items: center;
+          height: 80px;
+          font-size: 30px;
+          margin-left:50px
+        "
+      >
+        纳斯游戏平台
+      </div>
+    </div> -->
+    <div
+      :class="{ block: true, mobileBlock: isMobile }"
+      v-if="!isMobile || item.mobile"
+      v-for="(item, index) in gameList"
+      :key="index"
+      :style="color2Style(item.color)"
+    >
+      <div class="innerBlock" @click="goto(index)">
+        <div class="name">
+          <span>{{ item.name }}</span>
+        </div>
+        <div v-if="!isMobile" class="desc">{{ item.desc }}</div>
+      </div>
+      <div v-if="item.loading" class="loading">
+        <i class="el-icon-loading"></i>
+      </div>
+    </div>
+  </div>
+</template>
+
+<style scoped lang="scss">
+.header {
+  margin-top: 10px;
+  width: 100%;
+  height: 0px;
+  background: rgb(186, 228, 176);
+}
+#content {
+  width: 100vw;
+  height: 100vh;
+  display: flex;
+  flex-flow: row wrap;
+  align-items: stretch;
+  align-content: stretch;
+  .block {
+    min-width: 20%;
+    flex: 1;
+    position: relative;
+    cursor: pointer;
+    &.mobileBlock {
+      min-width: 50%;
+      .innerBlock {
+        background-color: rgba(0, 0, 0, 0);
+        .name {
+          color: rgba(0, 0, 0, 0.75);
+        }
+      }
+    }
+    .innerBlock {
+      width: 100%;
+      height: 100%;
+      padding: 0 20px;
+      box-sizing: border-box;
+      border: 8px solid transparent;
+      background-color: rgba(0, 0, 0, 0.5);
+      transition: background-color 300ms, border-color 300ms;
+      display: flex;
+      flex-flow: column nowrap;
+      justify-content: center;
+      align-items: center;
+      .name {
+        color: rgba(255, 255, 255, 0.5);
+        transition: color 500ms;
+        font-size: 20px;
+        font-weight: bold;
+        text-align: center;
+      }
+      .desc {
+        margin-top: 20px;
+        color: rgba(255, 255, 255, 0.25);
+        transition: color 500ms;
+        font-size: 12px;
+      }
+      &:hover {
+        border-top-color: rgba(255, 255, 255, 0.5);
+        border-left-color: rgba(255, 255, 255, 0.3);
+        border-right-color: rgba(0, 0, 0, 0.3);
+        border-bottom-color: rgba(0, 0, 0, 0.5);
+        background-color: rgba(0, 0, 0, 0);
+        .name {
+          color: rgba(0, 0, 0, 0.75);
+        }
+        .desc {
+          color: rgba(0, 0, 0, 0.5);
+        }
+      }
+      &:active {
+        border-top-color: rgba(0, 0, 0, 0.5);
+        border-left-color: rgba(0, 0, 0, 0.3);
+        border-right-color: rgba(255, 255, 255, 0.3);
+        border-bottom-color: rgba(255, 255, 255, 0.5);
+        background-color: rgba(0, 0, 0, 0.3);
+        .name {
+          color: rgba(0, 0, 0, 0.75);
+        }
+        .desc {
+          color: rgba(0, 0, 0, 0.5);
+        }
+      }
+    }
+    .loading {
+      width: 100%;
+      height: 100%;
+      position: absolute;
+      top: 0;
+      left: 0;
+      background-color: rgba(255, 255, 255, 0.5);
+      display: flex;
+      flex-flow: row nowrap;
+      justify-content: center;
+      align-items: center;
+      color: white;
+      font-size: 64px;
+      cursor: no-drop;
+    }
+  }
+}
+</style>
+
+<script>
+export default {
+  name: "gameMenu",
+  data() {
+    return {
+      isMobile: false,
+      loading: false,
+      gameList: [
+        {
+          name: "扫雷",
+          path: "/minesweeper",
+          desc: "经典扫雷，左键打开，右键插旗",
+          color: "#b0b0b0",
+          loading: false,
+        },
+        {
+          name: "贪吃蛇",
+          path: "/snake",
+          desc: "贪吃蛇，WASD或方向键操控",
+          color: "#707070",
+          loading: false,
+        },
+        {
+          name: "填色",
+          path: "/color",
+          desc: "填色使之成渐变状",
+          color: "#ff5e52",
+          loading: false,
+        },
+        {
+          name: "连连看",
+          path: "/link",
+          desc: "经典连连看，左键操作，无解需要刷新重来",
+          color: "#ffef6e",
+          loading: false,
+        },
+        {
+          name: "跳一跳",
+          path: "/jump",
+          desc: "横版跳跃游戏，WASD或方向键操控，开发中...",
+          color: "#6df8ff",
+          loading: false,
+        },
+        {
+          name: "Picross",
+          path: "/picross",
+          desc: "经典Picross",
+          color: "#5dffbd",
+          loading: false,
+        },
+        {
+          name: "猜数字",
+          path: "/digital",
+          desc: "经典猜数字游戏 - Bulls and Cows",
+          color: "#e19bff",
+          loading: false,
+        },
+        {
+          name: "狼人杀上帝助手",
+          path: "/wolf",
+          desc: "狼人kill专用发牌器",
+          color: "#ffbc64",
+          loading: false,
+          mobile: true,
+        },
+        // {
+        //   name: "12班去向图",
+        //   path: "/graduate",
+        //   desc: "110900010643",
+        //   color: "#ff7381",
+        //   loading: false,
+        //   mobile: true,
+        // },
+        {
+          name: "地形生成器",
+          path: "/eco",
+          desc: "自主研发，已搁浅",
+          color: "#6285ff",
+          loading: false,
+        },
+        {
+          name: "css画板",
+          path: "/cssDraw",
+          desc: "纯css画一些东西",
+          color: "#a6ff5d",
+          loading: false,
+          mobile: true,
+        },
+        {
+          name: "三灾",
+          path: "/tripleDisaster",
+          desc: "移动端文字冒险游戏",
+          color: ["135deg", "#ffad51", "#87511e"],
+          loading: false,
+          mobile: true,
+        },
+        {
+          name: "魔方",
+          path: "/magicCube",
+          desc: "用three.js创建的魔方游戏，支持3-5阶，自由旋转视角",
+          color: ["135deg", "#fbff00", "#ff6625"],
+          loading: false,
+          newTab: true,
+        },
+        {
+          name: "杠·地图编辑器",
+          path: "/gangEditor",
+          desc: "用three.js创建的地图编辑器",
+          color: ["135deg", "#eaff00", "#00d220"],
+          loading: false,
+          newTab: true,
+        },
+        {
+          name: "纳斯游戏有限公司",
+          path: "/gangCompany",
+          desc: "移动端模拟经营类游戏",
+          color: ["135deg", "#35e7ff", "#6f39e2"],
+          loading: false,
+          mobile: true,
+        },
+        {
+          name: "动物世界",
+          path: "/animal",
+          desc: "根据电影《动物世界》引发的一些思考",
+          color: ["135deg", "#ffc162", "#e4417e"],
+          loading: false,
+          mobile: true,
+        },
+        {
+          name: "CTO之路",
+          path: "/road2CTO",
+          desc: "传统rpg类型游戏",
+          color: ["135deg", "#56ff7b", "#439f89"],
+          loading: false,
+          mobile: true,
+        },
+      ],
+    };
+  },
+  mounted() {
+    this.isMobile = navigator.userAgent.match(
+      /(phone|pad|pod|iPhone|iPod|ios|iPad|Android|Mobile|BlackBerry|IEMobile|MQQBrowser|JUC|Fennec|wOSBrowser|BrowserNG|WebOS|Symbian|Windows Phone)/i
+    );
+  },
+  methods: {
+    color2Style(color) {
+      if (typeof color === "string") return { backgroundColor: color };
+      if (Array.isArray(color)) {
+        return { backgroundImage: `linear-gradient(${color.join(",")})` };
+      }
+      return {};
+    },
+    goto(index) {
+      if (!this.loading) {
+        if (this.gameList[index].newTab) {
+          let page = this.$router.resolve({
+            path: this.gameList[index].path,
+          });
+          window.open(page.href, "_blank");
+        } else {
+          this.gameList[index].loading = true;
+          this.loading = true;
+          this.$router.push(this.gameList[index].path, () => {
+            this.gameList[index].loading = false;
+            this.loading = false;
+          });
+        }
+      }
+    },
+  },
+};
+
+/**
+                           _ooOoo_
+                          o8888888o
+                          88" . "88
+                          (| -_- |)
+                           O\ = /O
+                       ____/`---'\____
+                     .   ' \\| |// `.
+                      / \\||| : |||// \
+                    / _||||| -:- |||||- \
+                      | | \\\ - /// | |
+                    | \_| ''\---/'' | |
+                     \ .-\__ `-` ___/-. /
+                  ___`. .' /--.--\ `. . __
+               ."" '< `.___\_<|>_/___.' >'"".
+              | | : `- \`.;`\ _ /`;.`/ - ` : | |
+                \ \ `-. \_ __\ /__ _/ .-` / /
+        ======`-.____`-.___\_____/___.-`____.-'======
+                           `=---='
+
+        .............................................
+                 佛祖保佑             永无BUG
+         佛曰:
+                 写字楼里写字间，写字间里程序员；
+                 程序人员写程序，又拿程序换酒钱。
+                 酒醒只在网上坐，酒醉还来网下眠；
+                 酒醉酒醒日复日，网上网下年复年。
+                 但愿老死电脑间，不愿鞠躬老板前；
+                 奔驰宝马贵者趣，公交自行程序员。
+                 别人笑我忒疯癫，我笑自己命太贱；
+                 不见满街漂亮妹，哪个归得程序员？
+
+ */
+
+
+</script>
